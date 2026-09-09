@@ -113,6 +113,36 @@ export default function StudioHeader({
         </button>
 
         <button
+          id="nav-google-drive"
+          onClick={() => onSelectView('drive')}
+          className={`h-full px-3.5 flex items-center font-['Inter'] font-semibold text-[11.5px] uppercase tracking-wider transition-colors ${
+            effectiveView === 'drive'
+              ? 'bg-[#1f2229] text-blue-400 border-b-2 border-blue-400'
+              : 'text-[#949da8] hover:text-[#e2e2e6]'
+          }`}
+        >
+          GOOGLE DRIVE
+          <span className="ml-1.5 px-1 py-0.2 text-[9px] bg-blue-950/80 text-blue-400 border border-blue-600/40 rounded font-['JetBrains_Mono'] font-bold">
+            PICKER
+          </span>
+        </button>
+
+        <button
+          id="nav-gemini-studio"
+          onClick={() => onSelectView('gemini_studio')}
+          className={`h-full px-3.5 flex items-center font-['Inter'] font-semibold text-[11.5px] uppercase tracking-wider transition-colors ${
+            effectiveView === 'gemini_studio'
+              ? 'bg-[#1f2229] text-amber-400 border-b-2 border-amber-400'
+              : 'text-[#949da8] hover:text-[#e2e2e6]'
+          }`}
+        >
+          GEMINI STUDIO
+          <span className="ml-1.5 px-1 py-0.2 text-[9px] bg-amber-950/80 text-amber-400 border border-amber-600/40 rounded font-['JetBrains_Mono'] font-bold">
+            AI LAB
+          </span>
+        </button>
+
+        <button
           onClick={() => onSelectView('production')}
           className="h-full px-3.5 flex items-center font-['Inter'] font-semibold text-[11.5px] text-[#949da8] hover:text-[#e2e2e6] transition-colors tracking-wider uppercase"
         >

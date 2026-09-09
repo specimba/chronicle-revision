@@ -185,7 +185,7 @@ export async function runChronicleAgentRevision(
 
   // Hop 3: Downstream continuity and receipts
   const hop3Res = await executeMcpQuery(
-    `SELECT receipt_id, invariant_id, status FROM chronicle_validation_receipts ORDER BY validated_at DESC LIMIT 5`
+    `SELECT receipt_id, invariant_id, status FROM chronicle_validation_receipts ORDER BY created_at DESC LIMIT 5`
   );
   mcpReceipts.push(hop3Res.receipt);
 
@@ -200,7 +200,7 @@ Interpret the director revision, perform bounded 3-hop ripple discovery, formula
     tools: adkMcpToolset ? [adkMcpToolset] : [],
   });
 
-  // 3. Orchestrate with Gemini 3.8 Flash using structured schema
+  // 3. Orchestrate with Gemini using structured schema
   const ai = new GoogleGenAI({ apiKey });
   const systemInstruction = `You are Chronicle ADK, the authoritative continuity & revision orchestration engine for film & virtual production.
 MANDATES:
@@ -225,19 +225,38 @@ Locked Invariant Rows: ${JSON.stringify(hop2Res.data)}
 Analyze the ripple cascade up to 3 hops and return structured RevisionPatch, CreativeContract, RepairManifest, and truthful invariantEvaluations.`;
 
   const modelCallStart = performance.now();
-  const modelResponse = await ai.models.generateContent({
-    model: 'gemini-3.8-flash',
-    contents: userContent,
-    config: {
-      systemInstruction,
-      responseMimeType: 'application/json',
-      responseSchema: revisionOutputSchema,
-      temperature: 0.1,
-    },
-  });
-  const modelLatencyMs = Math.round((performance.now() - modelCallStart) * 100) / 100;
+  const modelCandidates = ['gemini-3.8-flash', 'gemini-3.6-flash'];
+  let modelResponseText = '';
+  let lastModelError: unknown = null;
 
-  const parsed = JSON.parse(modelResponse.text || '{}');
+  for (const modelCandidate of modelCandidates) {
+    try {
+      const response = await ai.models.generateContent({
+        model: modelCandidate,
+        contents: userContent,
+        config: {
+          systemInstruction,
+          responseMimeType: 'application/json',
+          responseSchema: revisionOutputSchema,
+          temperature: 0.1,
+        },
+      });
+      if (response.text) {
+        modelResponseText = response.text;
+        break;
+      }
+    } catch (err) {
+      lastModelError = err;
+      await new Promise((resolve) => setTimeout(resolve, 350));
+    }
+  }
+
+  if (!modelResponseText && lastModelError) {
+    throw lastModelError;
+  }
+
+  const modelLatencyMs = Math.round((performance.now() - modelCallStart) * 100) / 100;
+  const parsed = JSON.parse(modelResponseText || '{}');
 
   // 4. Construct Bounded Hop Graph (up to 3 hops)
   const boundedHops: HopStep[] = [

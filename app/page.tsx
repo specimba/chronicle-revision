@@ -11,6 +11,8 @@ import RuntimeDiagnosticsModal from '@/components/RuntimeDiagnosticsModal';
 import VideoScopesModal from '@/components/VideoScopesModal';
 import AuditJsonModal from '@/components/AuditJsonModal';
 import EdlExportModal from '@/components/EdlExportModal';
+import GoogleDriveView from '@/components/GoogleDriveView';
+import GeminiStudioView from '@/components/GeminiStudioView';
 import {
   WorkstationView,
   ClickHouseHealth,
@@ -39,6 +41,15 @@ export default function ChronicleWorkspacePage() {
     sequenceNumber: number;
     scenes?: SceneItem[];
     invariants?: LockedInvariant[];
+  } | null>(null);
+
+  // Ingest bridge from Drive/Picker to Gemini Generative Studio
+  const [studioInitialAsset, setStudioInitialAsset] = useState<{
+    type: 'image' | 'video' | 'audio' | 'document';
+    url?: string;
+    id: string;
+    name: string;
+    mimeType: string;
   } | null>(null);
 
   // Loading & error states
@@ -204,6 +215,10 @@ export default function ChronicleWorkspacePage() {
       setActiveView('simulation');
     } else if (toolId === 'committed') {
       setActiveView('committed');
+    } else if (toolId === 'drive') {
+      setActiveView('drive');
+    } else if (toolId === 'gemini_studio') {
+      setActiveView('gemini_studio');
     } else if (toolId === 'continuity') {
       setActiveView('production');
     }
@@ -269,6 +284,22 @@ export default function ChronicleWorkspacePage() {
               health={health}
               scenes={committedBaseline?.scenes || scenes}
               invariants={committedBaseline?.invariants || invariants}
+            />
+          )}
+
+          {activeView === 'drive' && (
+            <GoogleDriveView
+              onNavigateToStudio={(media) => {
+                if (media) setStudioInitialAsset(media);
+                setActiveView('gemini_studio');
+              }}
+            />
+          )}
+
+          {activeView === 'gemini_studio' && (
+            <GeminiStudioView
+              initialAsset={studioInitialAsset}
+              onOpenDrive={() => setActiveView('drive')}
             />
           )}
         </div>

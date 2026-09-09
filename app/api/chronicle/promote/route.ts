@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { promoteRevision, checkClickHouseHealth } from '@/lib/clickhouse';
+import {
+  promoteRevision,
+  checkClickHouseHealth,
+  fetchCanonicalScenes,
+  fetchLockedInvariants,
+} from '@/lib/clickhouse';
 
 export async function POST(req: NextRequest) {
   try {
@@ -40,6 +45,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const [committedScenes, committedInvariants] = await Promise.all([
+      fetchCanonicalScenes(),
+      fetchLockedInvariants(),
+    ]);
+
     return NextResponse.json({
       success: true,
       status: 'COMMITTED',
@@ -47,6 +57,8 @@ export async function POST(req: NextRequest) {
       commitHash: result.commitHash,
       sequenceNum: result.sequenceNum,
       timestamp: result.timestamp,
+      committedScenes,
+      committedInvariants,
       receipt: {
         actor: promotedBy,
         action: 'HUMAN_PROMOTION_COMMITTED',

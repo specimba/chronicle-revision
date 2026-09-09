@@ -51,6 +51,32 @@ export default function MiniActivityRail({
       </button>
 
       <button
+        id="rail-google-drive"
+        onClick={() => handleSelect('drive')}
+        className={`w-8 h-8 rounded flex items-center justify-center transition-colors ${
+          currentTool === 'drive'
+            ? 'bg-[#1f2229] text-blue-400 border border-blue-500/40 shadow-sm'
+            : 'text-blue-400/70 hover:bg-[#16181d] hover:text-blue-300'
+        }`}
+        title="Google Drive Vault & Google Picker Integration"
+      >
+        <span className="material-symbols-outlined text-[18px]">cloud</span>
+      </button>
+
+      <button
+        id="rail-gemini-studio"
+        onClick={() => handleSelect('gemini_studio')}
+        className={`w-8 h-8 rounded flex items-center justify-center transition-colors ${
+          currentTool === 'gemini_studio'
+            ? 'bg-[#1f2229] text-amber-400 border border-amber-500/40 shadow-sm'
+            : 'text-amber-400/70 hover:bg-[#16181d] hover:text-amber-300'
+        }`}
+        title="Gemini Generative Lab: Veo 3 Video, Image, Lyria, Transcribe"
+      >
+        <span className="material-symbols-outlined text-[18px]">auto_awesome</span>
+      </button>
+
+      <button
         onClick={() => {
           handleSelect('architecture');
           onOpenArchitecture?.();

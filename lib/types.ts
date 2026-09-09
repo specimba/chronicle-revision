@@ -1,4 +1,10 @@
-export type WorkstationView = 'production' | 'simulation' | 'committed' | 'architecture';
+export type WorkstationView =
+  | 'production'
+  | 'simulation'
+  | 'committed'
+  | 'architecture'
+  | 'drive'
+  | 'gemini_studio';
 
 export interface SceneItem {
   id: string;
