@@ -1,0 +1,6 @@
+{
+  "name": "Chronicle // Revision Workspace",
+  "description": "Professional digital intermediate continuity ledger, bounded 3-hop ripple analysis, and real-time revision simulator for agentic cinema.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
