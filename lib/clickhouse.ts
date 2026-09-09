@@ -1,6 +1,5 @@
 import { createClient, type ClickHouseClient } from '@clickhouse/client';
 import crypto from 'node:crypto';
-import { execSync } from 'node:child_process';
 import {
   ClickHouseHealth,
   SceneItem,
@@ -14,48 +13,80 @@ import {
   MediaArtifact,
 } from './types';
 
-// Configuration from environment variables
-const CLICKHOUSE_URL = process.env.CLICKHOUSE_URL || process.env.CLICKHOUSE_HOST || 'http://127.0.0.1:8123';
-const CLICKHOUSE_USER = process.env.CLICKHOUSE_USER || 'default';
-const CLICKHOUSE_PASSWORD = process.env.CLICKHOUSE_PASSWORD || '';
-const CLICKHOUSE_DATABASE = process.env.CLICKHOUSE_DATABASE || 'default';
+// Direct Writer configuration from environment variables
+export function getClickHouseWriterConfig(): {
+  isConfigured: boolean;
+  url: string;
+  host: string;
+  username: string;
+  database: string;
+  password?: string;
+} {
+  const rawHost = process.env.CLICKHOUSE_HOST;
+  const rawUrl = process.env.CLICKHOUSE_URL;
+
+  if (!rawHost && !rawUrl) {
+    return {
+      isConfigured: false,
+      url: '',
+      host: 'NOT_CONFIGURED',
+      username: '',
+      database: '',
+    };
+  }
+
+  let finalUrl = '';
+  let finalHost = '';
+
+  if (rawUrl) {
+    finalUrl = rawUrl;
+    try {
+      finalHost = new URL(rawUrl).host;
+    } catch {
+      finalHost = rawUrl;
+    }
+  } else if (rawHost) {
+    const isSecure = process.env.CLICKHOUSE_SECURE !== 'false';
+    const protocol = isSecure ? 'https' : 'http';
+    const port = process.env.CLICKHOUSE_PORT || (isSecure ? '8443' : '8123');
+    finalUrl = `${protocol}://${rawHost}:${port}`;
+    finalHost = `${rawHost}:${port}`;
+  }
+
+  const username = process.env.CLICKHOUSE_WRITER_USER || process.env.CLICKHOUSE_USER || 'default';
+  const password = process.env.CLICKHOUSE_WRITER_PASSWORD || process.env.CLICKHOUSE_PASSWORD || '';
+  const database = process.env.CLICKHOUSE_DATABASE || 'default';
+
+  return {
+    isConfigured: true,
+    url: finalUrl,
+    host: finalHost,
+    username,
+    password,
+    database,
+  };
+}
 
 let sharedReaderClient: ClickHouseClient | null = null;
 let sharedWriterClient: ClickHouseClient | null = null;
 let isInitialized = false;
 
 /**
- * Ensures the ClickHouse daemon is running in local container environments.
- */
-function ensureDaemonRunning(): void {
-  if (CLICKHOUSE_URL.includes('127.0.0.1') || CLICKHOUSE_URL.includes('localhost')) {
-    try {
-      execSync('curl -s -m 1 http://127.0.0.1:8123/ping', { stdio: 'ignore' });
-    } catch {
-      try {
-        // Attempt to launch daemon if installed locally
-        execSync('clickhouse server --daemon', { stdio: 'ignore' });
-        // Brief sleep to let it bind
-        execSync('sleep 1', { stdio: 'ignore' });
-      } catch {
-        // Ignored; if clickhouse is not present locally, health check will report UNAVAILABLE
-      }
-    }
-  }
-}
-
-/**
- * Read-only client for agent evidence access.
+ * Read-only client for fallback direct queries when configured.
  * Enforces SELECT-only execution and explicit limits.
  */
 export function getReaderClient(): ClickHouseClient {
-  ensureDaemonRunning();
+  const config = getClickHouseWriterConfig();
+  if (!config.isConfigured) {
+    throw new Error('ClickHouse is NOT_CONFIGURED. Provide CLICKHOUSE_HOST or CLICKHOUSE_URL.');
+  }
+
   if (!sharedReaderClient) {
     sharedReaderClient = createClient({
-      url: CLICKHOUSE_URL,
-      username: CLICKHOUSE_USER,
-      password: CLICKHOUSE_PASSWORD,
-      database: CLICKHOUSE_DATABASE,
+      url: config.url,
+      username: config.username,
+      password: config.password,
+      database: config.database,
       request_timeout: 10000,
       clickhouse_settings: {
         readonly: '1', // Enforce read-only at the ClickHouse session level
@@ -70,13 +101,17 @@ export function getReaderClient(): ClickHouseClient {
  * Append-only semantics enforced: INSERT only; UPDATE/DELETE strictly forbidden.
  */
 export function getWriterClient(): ClickHouseClient {
-  ensureDaemonRunning();
+  const config = getClickHouseWriterConfig();
+  if (!config.isConfigured) {
+    throw new Error('ClickHouse writer is NOT_CONFIGURED. Set CLICKHOUSE_HOST and writer credentials.');
+  }
+
   if (!sharedWriterClient) {
     sharedWriterClient = createClient({
-      url: CLICKHOUSE_URL,
-      username: CLICKHOUSE_USER,
-      password: CLICKHOUSE_PASSWORD,
-      database: CLICKHOUSE_DATABASE,
+      url: config.url,
+      username: config.username,
+      password: config.password,
+      database: config.database,
       request_timeout: 15000,
     });
   }
@@ -107,7 +142,21 @@ export function validateReadOnlyQuery(query: string): { valid: boolean; error?: 
  */
 export async function checkClickHouseHealth(): Promise<ClickHouseHealth> {
   const startTime = performance.now();
-  ensureDaemonRunning();
+  const config = getClickHouseWriterConfig();
+
+  if (!config.isConfigured) {
+    return {
+      status: 'NOT_CONFIGURED',
+      host: 'NOT_CONFIGURED',
+      latencyMs: 0,
+      totalScenes: 0,
+      totalRevisions: 0,
+      totalReceipts: 0,
+      isReadOnlyReaderReady: false,
+      isScopedWriterReady: false,
+      error: 'ClickHouse writer credentials not configured. Specify CLICKHOUSE_HOST or CLICKHOUSE_URL.',
+    };
+  }
 
   try {
     const client = getWriterClient();
@@ -146,7 +195,8 @@ export async function checkClickHouseHealth(): Promise<ClickHouseHealth> {
     return {
       status: 'CONNECTED',
       version: rows[0]?.version || 'ClickHouse',
-      host: CLICKHOUSE_URL,
+      host: config.host,
+      database: config.database || 'default',
       latencyMs,
       totalScenes,
       totalRevisions,
@@ -158,8 +208,8 @@ export async function checkClickHouseHealth(): Promise<ClickHouseHealth> {
     const latencyMs = Math.round((performance.now() - startTime) * 100) / 100;
     const errorMessage = err instanceof Error ? err.message : String(err);
     return {
-      status: CLICKHOUSE_URL ? 'UNAVAILABLE' : 'NOT_CONFIGURED',
-      host: CLICKHOUSE_URL || 'NONE',
+      status: 'UNAVAILABLE',
+      host: config.host || 'UNAVAILABLE',
       latencyMs,
       totalScenes: 0,
       totalRevisions: 0,

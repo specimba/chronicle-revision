@@ -111,10 +111,18 @@ export default function CommittedBaselineView({
           <span className="px-2 py-0.5 rounded bg-[#181b21] border border-[#282d36] text-sky-300">
             CANONICAL MASTER BASELINE
           </span>
-          <span className="px-2 py-0.5 rounded bg-emerald-900/30 border border-emerald-700/50 text-emerald-300">
+          <span
+            className={`px-2 py-0.5 rounded border text-[10px] font-['JetBrains_Mono'] ${
+              health?.status === 'CONNECTED'
+                ? 'bg-emerald-900/30 border-emerald-700/50 text-emerald-300'
+                : health?.status === 'NOT_CONFIGURED'
+                ? 'bg-[#181b21] border-[#282d36] text-[#9ca3af]'
+                : 'bg-rose-950/40 border-rose-800/50 text-rose-300'
+            }`}
+          >
             {health?.status === 'CONNECTED'
-              ? `CLICKHOUSE DB SYNCED (${health.latencyMs}ms)`
-              : `CLICKHOUSE: ${health?.status || 'APPEND-ONLY PROVISIONED'}`}
+              ? `CLICKHOUSE DB CONNECTED (${health.latencyMs}ms)`
+              : `CLICKHOUSE: ${health?.status || 'NOT_CONFIGURED'}`}
           </span>
           <span className="px-2 py-0.5 rounded bg-[#1f2228] text-[#c4e7ff] font-semibold">
             COMMIT #{sequenceNum}-R4

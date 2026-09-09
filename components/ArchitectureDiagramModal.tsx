@@ -121,9 +121,9 @@ export default function ArchitectureDiagramModal({
                     : 'bg-[#16181d] border-[#262a32] hover:border-[#4b5563]'
                 }`}
               >
-                <div className="text-emerald-400 font-bold mb-1">05. WRITE-BACK</div>
-                <div className="text-[#e2e2e6] text-[10px]">ClickHouse Commit</div>
-                <div className="text-[#9ca3af] text-[9px] mt-1">Audit Logged &amp; Locked</div>
+                <div className="text-emerald-400 font-bold mb-1">05. HUMAN PROMOTE</div>
+                <div className="text-[#e2e2e6] text-[10px]">Deterministic Writer</div>
+                <div className="text-[#9ca3af] text-[9px] mt-1">Append-Only ClickHouse INSERT</div>
               </div>
             </div>
           </div>
@@ -225,8 +225,12 @@ export default function ArchitectureDiagramModal({
               human / gate review
                        │
                        ▼
-                 WRITE BACK TO
-                 mcp-clickhouse
+                HUMAN PROMOTION
+             (Deterministic Route)
+                       │
+                       ▼
+              APPEND-ONLY INSERT
+             (Direct Writer Path)
                        │
                        ▼
               REVISION COMMITTED`}
@@ -237,7 +241,7 @@ export default function ArchitectureDiagramModal({
         {/* Footer */}
         <div className="h-10 px-4 bg-[#16181d] border-t border-[#262a32] flex items-center justify-between shrink-0 font-['JetBrains_Mono'] text-[11px]">
           <span className="text-[#9ca3af]">
-            CONTINUITY ENGINE: <strong className="text-[#e2e2e6]">CLICKHOUSE + GEMINI 2.5 FLASH</strong>
+            CONTINUITY ENGINE: <strong className="text-[#e2e2e6]">CLICKHOUSE CLOUD + GEMINI 3.8 FLASH (GOOGLE ADK)</strong>
           </span>
           <button
             type="button"

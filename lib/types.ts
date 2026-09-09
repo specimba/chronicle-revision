@@ -150,6 +150,7 @@ export interface ClickHouseHealth {
   status: ClickHouseHealthStatus;
   version?: string;
   host: string;
+  database?: string;
   latencyMs: number;
   totalScenes: number;
   totalRevisions: number;
@@ -187,6 +188,7 @@ export interface PromotionResult {
 
 export interface ActiveRevisionState {
   revisionId: string;
+  runtimeState?: ChronicleRuntimeState;
   modelUsed?: string;
   modelLatencyMs?: number;
   revisionPatch?: RevisionPatch;
@@ -199,7 +201,66 @@ export interface ActiveRevisionState {
   }>;
   boundedHops?: unknown;
   invariants?: LockedInvariant[];
+  mcpReceipts?: Array<{
+    toolName: string;
+    queryHash?: string;
+    durationMs: number;
+    status: string;
+    timestamp: string;
+  }>;
   clickhouseSynced?: boolean;
   timestamp?: string;
+}
+
+export type ChronicleRuntimeState =
+  | 'NOT_CONFIGURED'
+  | 'UNAVAILABLE'
+  | 'CONNECTING'
+  | 'QUERYING'
+  | 'QUERY_FAILED'
+  | 'CONNECTED'
+  | 'VALIDATION_UNKNOWN'
+  | 'VALIDATION_FAILED'
+  | 'READY_TO_PROMOTE'
+  | 'COMMITTED';
+
+export type McpServerStatus = 'NOT_CONFIGURED' | 'CONNECTED' | 'UNAVAILABLE' | 'QUERY_FAILED';
+
+export interface McpDiagnostics {
+  status: McpServerStatus;
+  serverUrlHostOnly: string;
+  implementation: 'official mcp-clickhouse';
+  protocolConnection: 'StreamableHTTP' | 'NONE';
+  toolsDiscovered: string[];
+  lastQueryStatus: 'IDLE' | 'EXECUTING' | 'SUCCESS' | 'QUERY_FAILED' | 'NOT_CONFIGURED';
+  lastQueryHash?: string;
+  error?: string;
+}
+
+export interface RuntimeDiagnostics {
+  webApp: {
+    status: 'HEALTHY' | 'DEGRADED';
+    timestamp: string;
+  };
+  gemini: {
+    status: 'CONFIGURED' | 'NOT_CONFIGURED';
+    model: string;
+    error?: string;
+  };
+  googleAdk: {
+    status: 'READY' | 'UNAVAILABLE';
+    implementation: '@google/adk';
+    version: string;
+  };
+  mcp: McpDiagnostics;
+  clickhouse: ClickHouseHealth;
+  writer: {
+    status: 'READY' | 'NOT_CONFIGURED' | 'UNAVAILABLE';
+    host: string;
+    userConfigured: boolean;
+    appendOnlyGuaranteed: boolean;
+    error?: string;
+  };
+  timestamp: string;
 }
 

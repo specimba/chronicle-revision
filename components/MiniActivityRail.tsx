@@ -73,6 +73,18 @@ export default function MiniActivityRail({
         <span className="material-symbols-outlined text-[18px]">graphic_eq</span>
       </button>
 
+      <button
+        onClick={() => handleSelect('diagnostics')}
+        className={`w-8 h-8 rounded flex items-center justify-center transition-colors ${
+          currentTool === 'diagnostics'
+            ? 'bg-[#1f2229] text-[#38bdf8] border border-[#38bdf8]/40 shadow-sm'
+            : 'text-[#949da8] hover:bg-[#16181d] hover:text-[#e2e2e6]'
+        }`}
+        title="Runtime Diagnostics & MCP Subsystem Audit"
+      >
+        <span className="material-symbols-outlined text-[18px]">analytics</span>
+      </button>
+
       <div className="mt-auto flex flex-col items-center gap-2">
         <button
           onClick={() => {

@@ -8,6 +8,7 @@ interface StudioHeaderProps {
   activeView?: WorkstationView;
   onSelectView: (view: WorkstationView) => void;
   onOpenArchitecture: () => void;
+  onOpenDiagnostics?: () => void;
   isCommitted?: boolean;
   health?: ClickHouseHealth | null;
   geminiStatus?: { status: string; model: string } | null;
@@ -18,6 +19,7 @@ export default function StudioHeader({
   activeView,
   onSelectView,
   onOpenArchitecture,
+  onOpenDiagnostics,
   isCommitted: isCommittedProp,
   health,
   geminiStatus,
@@ -126,19 +128,33 @@ export default function StudioHeader({
           <span className="material-symbols-outlined text-[13px]">account_tree</span>
           <span>3-HOP RIPPLE</span>
         </button>
+
+        {/* Runtime Diagnostics Surface Quick Button */}
+        {onOpenDiagnostics && (
+          <button
+            onClick={onOpenDiagnostics}
+            className="h-7 px-2 ml-1 hidden lg:flex items-center gap-1.5 rounded bg-[#161a22] hover:bg-[#222733] text-sky-400 border border-sky-500/40 text-[10.5px] font-['JetBrains_Mono'] transition-colors"
+            title="Inspect Truthful Runtime Diagnostics (MCP / ClickHouse / ADK)"
+          >
+            <span className="material-symbols-outlined text-[13px]">analytics</span>
+            <span>DIAGNOSTICS</span>
+          </button>
+        )}
       </nav>
 
       {/* Right Telemetry & Status */}
       <div className="flex items-center gap-2.5">
         {/* Real ClickHouse Status Pill */}
         {health && (
-          <div
-            className={`hidden xl:flex items-center gap-1.5 px-2 py-0.5 rounded border font-['JetBrains_Mono'] text-[10px] ${
+          <button
+            type="button"
+            onClick={onOpenDiagnostics}
+            className={`hidden xl:flex items-center gap-1.5 px-2 py-0.5 rounded border font-['JetBrains_Mono'] text-[10px] cursor-pointer hover:brightness-110 transition-all ${
               health.status === 'CONNECTED'
                 ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300'
                 : 'bg-amber-950/60 border-amber-500/40 text-amber-300'
             }`}
-            title={`ClickHouse Host: ${health.host} (${health.latencyMs}ms latency)`}
+            title={`ClickHouse Host: ${health.host} (${health.latencyMs}ms latency) - Click for Diagnostics`}
           >
             <span
               className={`w-1.5 h-1.5 rounded-full ${
@@ -149,7 +165,7 @@ export default function StudioHeader({
             {health.status === 'CONNECTED' && (
               <span className="text-emerald-400/80">{health.latencyMs}ms</span>
             )}
-          </div>
+          </button>
         )}
 
         {/* Real Gemini Status Pill */}

@@ -944,68 +944,68 @@ export default function ActiveSimulationView({
               })
             ) : (
               <>
-                {/* Fallback default invariants */}
-                <div className="p-2 rounded bg-[#16181d] border border-emerald-500/30 space-y-1">
+                {/* Truthful unverified default invariants */}
+                <div className="p-2 rounded bg-[#16181d] border border-amber-500/30 space-y-1">
                   <div className="flex items-center justify-between font-semibold text-[#e2e2e6]">
                     <span>1. Weather Continuity</span>
-                    <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded font-['JetBrains_Mono'] text-[9px] font-bold">
-                      PASS
+                    <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.2 rounded font-['JetBrains_Mono'] text-[9px] font-bold">
+                      VALIDATION_UNKNOWN
                     </span>
                   </div>
                   <p className="text-[#9ca3af] text-[11px] leading-tight">
-                    Downpour erased via optical neural matte. Wet floor specularity clamped to dry timber.
+                    Downpour erased via optical neural matte. Awaiting live database validation receipt.
                   </p>
-                  <div className="flex items-center gap-1 font-['JetBrains_Mono'] text-[10px] text-emerald-400">
-                    <span className="material-symbols-outlined text-[12px]">check_circle</span>
-                    <span>Delta: 0 frames drop flag</span>
+                  <div className="flex items-center gap-1 font-['JetBrains_Mono'] text-[10px] text-amber-400">
+                    <span className="material-symbols-outlined text-[12px]">help</span>
+                    <span>Status: Unverified (Missing receipt)</span>
                   </div>
                 </div>
 
-                <div className="p-2 rounded bg-[#16181d] border border-emerald-500/30 space-y-1">
+                <div className="p-2 rounded bg-[#16181d] border border-amber-500/30 space-y-1">
                   <div className="flex items-center justify-between font-semibold text-[#e2e2e6]">
                     <span>2. Wardrobe Wetness Ratio</span>
-                    <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded font-['JetBrains_Mono'] text-[9px] font-bold">
-                      PASS
+                    <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.2 rounded font-['JetBrains_Mono'] text-[9px] font-bold">
+                      VALIDATION_UNKNOWN
                     </span>
                   </div>
                   <p className="text-[#9ca3af] text-[11px] leading-tight">
                     Maya wool coat gloss index reduced from 0.88 to 0.18 daylight matte texture.
                   </p>
-                  <div className="flex items-center gap-1 font-['JetBrains_Mono'] text-[10px] text-emerald-400">
-                    <span className="material-symbols-outlined text-[12px]">check_circle</span>
-                    <span>Surface reflectance match: 98.4%</span>
+                  <div className="flex items-center gap-1 font-['JetBrains_Mono'] text-[10px] text-amber-400">
+                    <span className="material-symbols-outlined text-[12px]">help</span>
+                    <span>Status: Unverified (Missing receipt)</span>
                   </div>
                 </div>
 
-                <div className="p-2 rounded bg-[#16181d] border border-emerald-500/30 space-y-1">
+                <div className="p-2 rounded bg-[#16181d] border border-amber-500/30 space-y-1">
                   <div className="flex items-center justify-between font-semibold text-[#e2e2e6]">
                     <span>3. ADR Dialogue Intelligibility</span>
-                    <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded font-['JetBrains_Mono'] text-[9px] font-bold">
-                      PASS
+                    <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.2 rounded font-['JetBrains_Mono'] text-[9px] font-bold">
+                      VALIDATION_UNKNOWN
                     </span>
                   </div>
                   <p className="text-[#9ca3af] text-[11px] leading-tight">
                     TK-13-ADR-04 lip-sync calibrated via phoneme warp mesh to actor jawline motion.
                   </p>
-                  <div className="flex items-center gap-1 font-['JetBrains_Mono'] text-[10px] text-emerald-400">
-                    <span className="material-symbols-outlined text-[12px]">check_circle</span>
-                    <span>Sync latency: 0.18ms (Clean bounds)</span>
+                  <div className="flex items-center gap-1 font-['JetBrains_Mono'] text-[10px] text-amber-400">
+                    <span className="material-symbols-outlined text-[12px]">help</span>
+                    <span>Status: Unverified (Missing receipt)</span>
                   </div>
                 </div>
 
-                <div className="p-2 rounded bg-[#16181d] border border-emerald-500/30 space-y-1">
+                <div className="p-2 rounded bg-[#16181d] border border-amber-500/30 space-y-1">
                   <div className="flex items-center justify-between font-semibold text-[#e2e2e6]">
                     <span>4. Score Cue 3M04 Collision</span>
-                    <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded font-['JetBrains_Mono'] text-[9px] font-bold">
-                      PASS
+                    <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.2 rounded font-['JetBrains_Mono'] text-[9px] font-bold">
+                      VALIDATION_UNKNOWN
                     </span>
                   </div>
                   <p className="text-[#9ca3af] text-[11px] leading-tight">
                     Sunrise string cadence re-anchored to frame #18,344 pier gate latch contact.
                   </p>
-                  <div className="flex items-center gap-1 font-['JetBrains_Mono'] text-[10px] text-emerald-400">
-                    <span className="material-symbols-outlined text-[12px]">check_circle</span>
-                    <span>Collision offset: 0.00ms (+120ms clearance)</span>
+                  <div className="flex items-center gap-1 font-['JetBrains_Mono'] text-[10px] text-amber-400">
+                    <span className="material-symbols-outlined text-[12px]">help</span>
+                    <span>Status: Unverified (Missing receipt)</span>
                   </div>
                 </div>
 
@@ -1115,8 +1115,8 @@ export default function ActiveSimulationView({
               const activeInvariants = propInvariants || [];
               const allPassed =
                 activeInvariants.length > 0
-                  ? activeInvariants.every((i) => i.latestStatus === 'PASS')
-                  : sunVectorSolved;
+                  ? activeInvariants.every((i) => i.latestStatus === 'PASS') && sunVectorSolved
+                  : false;
 
               return (
                 <>
