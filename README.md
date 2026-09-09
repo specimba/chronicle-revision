@@ -1,4 +1,20 @@
-# Chronicle // Agentic Cinema Continuity Engine
+
+
+https://github.com/user-attachments/assets/2f105f8f-1054-409c-9437-6ebac9793b0f
+<img width="1920" height="911" alt="chrome_U5uean8ZXV" src="https://github.com/user-attachments/assets/b3cead35-8989-43bb-8608-751b6b80cf21" />
+<img width="1920" height="911" alt="chrome_MZC7RM6jhz" src="https://github.com/user-attachments/assets/0a7f161a-ff3f-4c89-ae70-8bf02f940694" />
+<img width="1920" height="911" alt="chrome_MZC7RM6jhz" src="https://github.com/user-attachments/assets/3f53604b-5049-4ccb-9063-8df72fabddc7" />
+<img width="1920" height="911" alt="chrome_U5uean8ZXV" src="https://github.com/user-attachments/assets/f10b564d-108c-404e-9eea-1c724d155056" />
+
+![Uploading chrome_IlRy8tcf9W.png…]()
+<img width="1920" height="911" alt="chrome_TZU8V3LJjm" src="https://github.com/user-attachments/assets/7e0758e4-2818-4538-b440-201eddfe81bf" />
+<img width="487" height="741" alt="chrome_YwSV07guig" src="https://github.com/user-attachments/assets/7a81cf55-712a-4410-99ca-dc2f368b5ea1" />
+<img width="1920" height="911" alt="chrome_IlRy8tcf9W" src="https://github.com/user-attachments/assets/f6b58b42-6e97-4cb8-8e8c-a192c11c7362" />
+<img width="1920" height="911" alt="chrome_VW8LqznfaT" src="https://github.com/user-attachments/assets/db2e5a03-9cb8-4b7e-866b-a90d4c2922e5" />
+<img width="1920" height="911" alt="chrome_TZU8V3LJjm" src="https://github.com/user-attachments/assets/d756b82c-5a28-46cc-958c-59d7f6d16894" />
+
+# Chronicle // Agentic Cinema Continui<img width="1920" height="911" alt="chrome_VW8LqznfaT" src="https://github.com/user-attachments/assets/65400a3c-249a-4da8-9ddb-7aa58746c8bf" />
+ty Engine
 
 **Canonical Repository**: `specimba/chronicle-revision`  
 **Published Application**: `chronicle-revision.ai.studio`  
